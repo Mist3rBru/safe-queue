@@ -1,0 +1,15 @@
+__tests__/
+.git/
+.changeset/
+.github/
+.vscode/
+scripts/
+src/
+
+.editorconfig
+.gitignore
+.prettierignore
+.prettierrc.json
+build.config.ts
+jest.config.js
+tsconfig.json

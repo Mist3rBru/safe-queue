@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "outDir": "dist",
+    "module": "NodeNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "noEmit": true,
+    "forceConsistentCasingInFileNames": true,
+    "useUnknownInCatchVariables": false
+  }
+}
