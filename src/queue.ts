@@ -1,4 +1,9 @@
-import { Job, JobController, Queue, QueueParams } from './types'
+import { Job, Queue, QueueParams } from './types'
+
+interface JobController<TData> {
+  data: TData
+  attempts: number
+}
 
 export class _Queue<TData> implements Queue<TData> {
   public readonly job: Job<TData>
