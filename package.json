@@ -13,10 +13,11 @@
     "type": "git",
     "url": "https://github.com/Mist3rBru/safe-queue"
   },
+  "keywords": [],
   "files": [
     "dist"
   ],
-  "keywords": [],
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
