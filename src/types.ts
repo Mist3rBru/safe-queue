@@ -13,7 +13,7 @@ export interface JobController<TData> {
 
 export interface QueueParams<TData> {
   maxParallelProcs?: number
-  maxAttempts?: number
+  maxRetries?: number
   logError?: boolean
   job: Job<TData>
 }
@@ -21,4 +21,8 @@ export interface QueueParams<TData> {
 export interface Queue<TData> {
   enqueue(data: TData): void
   enqueueBulk(data: TData[]): void
+  clear(): void
+  pause(): void
+  resume(): void
+  size: number
 }

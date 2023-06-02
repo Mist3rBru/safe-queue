@@ -15,9 +15,9 @@ describe('createQueue', () => {
 
 describe('createJob', () => {
   it('should return a Job instance', () => {
-    const queue = createJob(async () => {})
+    const job = createJob(async () => {})
 
-    expect(queue).toStrictEqual({
+    expect(job).toStrictEqual({
       promise: expect.any(Function)
     })
   })

@@ -2,7 +2,7 @@ import { Job, JobController, Queue, QueueParams } from './types'
 
 export class _Queue<TData> implements Queue<TData> {
   public readonly job: Job<TData>
-  public readonly maxAttempts: number
+  public readonly maxRetries: number
   public readonly maxParallelProcs: number
   public readonly logError: boolean
   public waitingQueue: JobController<TData>[]
@@ -11,7 +11,7 @@ export class _Queue<TData> implements Queue<TData> {
 
   constructor(params: QueueParams<TData>) {
     this.job = params.job
-    this.maxAttempts = params.maxAttempts ?? 3
+    this.maxRetries = params.maxRetries ?? 3
     this.maxParallelProcs = params.maxParallelProcs ?? Infinity
     this.logError = params.logError ?? true
     this.waitingQueue = []
@@ -27,14 +27,16 @@ export class _Queue<TData> implements Queue<TData> {
     this.waitingQueue = []
   }
 
-  stop(): void {
+  pause(): void {
     this.isPaused = true
   }
 
   resume(): void {
     this.isPaused = false
-    for (let i = 0; i < this.maxParallelProcs; i++) {
-      this.process()
+    const limit =
+      this.size < this.maxParallelProcs ? this.size : this.maxParallelProcs
+    for (let i = 0; i < limit; i++) {
+      void this.process()
     }
   }
 
@@ -43,24 +45,12 @@ export class _Queue<TData> implements Queue<TData> {
       data,
       attempts: 0
     })
-    this.process()
+    void this.process()
   }
 
   enqueueBulk(dataBulk: TData[]): void {
     for (const data of dataBulk) {
-      this.enqueue(data)
-    }
-  }
-
-  handleError(error: Error, queueJob: JobController<TData>): void {
-    if (this.logError) {
-      console.error(error)
-    }
-
-    if (queueJob.attempts < this.maxAttempts) {
-      queueJob.attempts++
-      this.waitingQueue.unshift(queueJob)
-      this.process()
+      void this.enqueue(data)
     }
   }
 
@@ -75,7 +65,7 @@ export class _Queue<TData> implements Queue<TData> {
     }
 
     this.runningJobs++
-    this.job
+    return this.job
       .promise(queueJob.data)
       .catch(error => {
         this.handleError(error, queueJob)
@@ -84,5 +74,17 @@ export class _Queue<TData> implements Queue<TData> {
         this.runningJobs--
         this.process()
       })
+  }
+
+  handleError(error: Error, queueJob: JobController<TData>): void {
+    if (this.logError) {
+      console.error(error)
+    }
+
+    if (queueJob.attempts < this.maxRetries) {
+      queueJob.attempts++
+      this.waitingQueue.unshift(queueJob)
+      this.process()
+    }
   }
 }

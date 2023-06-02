@@ -18,6 +18,7 @@
   ],
   "keywords": [],
   "scripts": {
+    "start": "tsx playground.ts",
     "lint": "tsc --noEmit && prettier --write .",
     "build": "unbuild",
     "test": "jest",
