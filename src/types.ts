@@ -1,14 +1,14 @@
 export type JobPromise<TData> = (data: TData) => Promise<void>
 
-export interface JobParams<TData> {
-  promise: JobPromise<TData>
-}
-
 export interface Job<TData> {
   promise: JobPromise<TData>
 }
 
 export type JobCatalog = Record<string, Job<any>>
+
+export type InferData<TJob extends Job<any>> = TJob extends Job<infer TData>
+  ? TData
+  : never
 
 export interface QueueParams<TData> {
   maxParallelProcs?: number

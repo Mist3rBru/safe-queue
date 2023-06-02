@@ -1,6 +1,6 @@
 {
   "version": "0.0.0",
-  "name": "@mist3rbru/safe-queue",
+  "name": "safe-queue",
   "access": "public",
   "private": false,
   "author": {
