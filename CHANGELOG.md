@@ -1,5 +1,11 @@
 # @mist3rbru/safe-queue
 
+## 0.1.1
+
+### Patch Changes
+
+- 916ddd1: fix: package exports
+
 ## 0.1.0
 
 ### Minor Changes
