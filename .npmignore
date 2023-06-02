@@ -3,6 +3,7 @@ __tests__/
 .changeset/
 .github/
 .vscode/
+coverage/
 scripts/
 src/
 
