@@ -17,6 +17,8 @@ const makeSut = (params?: Partial<QueueParams<any>>): _Queue<any> => {
   return sut
 }
 
+jest.spyOn(console, 'error').mockImplementation()
+
 describe('Queue', () => {
   it('should set default values', async () => {
     const sut = makeSut()
