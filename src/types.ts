@@ -8,7 +8,7 @@ export type JobCatalog = Record<string, Job<any>>
 
 /**
  * Type alias to use with `Queue` type
- * @example 
+ * @example
  * type MailJob = typeof mailJob
  * type MailQueue = Queue<InferData<MailJob>>
  */

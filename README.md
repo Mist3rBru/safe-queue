@@ -5,7 +5,7 @@ A simple and type-safe, self managed queue
 ## Install
 
 ```sh
-  npm install safe-queue
+  npm install @mist3rbru/safe-queue
 ```
 
 ## Usage
