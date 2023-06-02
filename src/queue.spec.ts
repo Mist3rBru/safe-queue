@@ -23,8 +23,8 @@ describe('Queue', () => {
   it('should set default values', async () => {
     const sut = makeSut()
 
-    expect(sut.maxRetries).toBe(3)
-    expect(sut.maxParallelProcs).toBe(Infinity)
+    expect(sut.retry).toBe(3)
+    expect(sut.concurrency).toBe(Infinity)
     expect(sut.logError).toBe(true)
     expect(sut.waitingQueue.length).toBe(0)
     expect(sut.runningJobs).toBe(0)
@@ -34,13 +34,13 @@ describe('Queue', () => {
   it('should set provided values', async () => {
     const provided: Partial<QueueParams<any>> = {
       logError: false,
-      maxRetries: 5,
-      maxParallelProcs: 1
+      retry: 5,
+      concurrency: 1
     }
     const sut = makeSut(provided)
 
-    expect(sut.maxRetries).toBe(provided.maxRetries)
-    expect(sut.maxParallelProcs).toBe(provided.maxParallelProcs)
+    expect(sut.retry).toBe(provided.retry)
+    expect(sut.concurrency).toBe(provided.concurrency)
     expect(sut.logError).toBe(provided.logError)
   })
 
@@ -144,9 +144,9 @@ describe('Queue', () => {
     sut.pause()
   })
 
-  it('should call `process` until reach maxParallelProcs', async () => {
+  it('should call `process` until reach concurrency', async () => {
     const sut = makeSut({
-      maxParallelProcs: 2
+      concurrency: 2
     })
     const processSpy = jest.spyOn(sut, 'process')
 
@@ -172,7 +172,7 @@ describe('Queue', () => {
     sut.waitingQueue = [{ data: '', attempts: 0 }]
     await sut.process()
 
-    expect(jobSpy).toHaveBeenCalledTimes(sut.maxRetries + 1)
+    expect(jobSpy).toHaveBeenCalledTimes(sut.retry + 1)
   })
 
   it('should not process an empty waitingQueue', async () => {
@@ -183,12 +183,12 @@ describe('Queue', () => {
     expect(sut.runningJobs).toBe(0)
   })
 
-  it('should not process more than maxParallelProcs in parallel', async () => {
+  it('should not process more than concurrency in parallel', async () => {
     const sut = makeSut()
 
-    sut.runningJobs = sut.maxParallelProcs
+    sut.runningJobs = sut.concurrency
     sut.process()
 
-    expect(sut.runningJobs).toBe(sut.maxParallelProcs)
+    expect(sut.runningJobs).toBe(sut.concurrency)
   })
 })

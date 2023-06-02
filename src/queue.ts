@@ -7,8 +7,8 @@ interface JobController<TData> {
 
 export class _Queue<TData> implements Queue<TData> {
   public readonly job: Job<TData>
-  public readonly maxRetries: number
-  public readonly maxParallelProcs: number
+  public readonly retry: number
+  public readonly concurrency: number
   public readonly logError: boolean
   public waitingQueue: JobController<TData>[]
   public runningJobs: number
@@ -16,8 +16,8 @@ export class _Queue<TData> implements Queue<TData> {
 
   constructor(params: QueueParams<TData>) {
     this.job = params.job
-    this.maxRetries = params.maxRetries ?? 3
-    this.maxParallelProcs = params.maxParallelProcs ?? Infinity
+    this.retry = params.retry ?? 3
+    this.concurrency = params.concurrency ?? Infinity
     this.logError = params.logError ?? true
     this.waitingQueue = []
     this.runningJobs = 0
@@ -38,8 +38,7 @@ export class _Queue<TData> implements Queue<TData> {
 
   resume(): void {
     this.isPaused = false
-    const limit =
-      this.size < this.maxParallelProcs ? this.size : this.maxParallelProcs
+    const limit = this.size < this.concurrency ? this.size : this.concurrency
     for (let i = 0; i < limit; i++) {
       void this.process()
     }
@@ -60,7 +59,7 @@ export class _Queue<TData> implements Queue<TData> {
   }
 
   async process(): Promise<void> {
-    if (this.isPaused || this.runningJobs >= this.maxParallelProcs) {
+    if (this.isPaused || this.runningJobs >= this.concurrency) {
       return
     }
 
@@ -86,7 +85,7 @@ export class _Queue<TData> implements Queue<TData> {
       console.error(error)
     }
 
-    if (queueJob.attempts < this.maxRetries) {
+    if (queueJob.attempts < this.retry) {
       queueJob.attempts++
       this.waitingQueue.unshift(queueJob)
       this.process()

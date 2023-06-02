@@ -11,8 +11,8 @@ export type InferData<TJob extends Job<any>> = TJob extends Job<infer TData>
   : never
 
 export interface QueueParams<TData> {
-  maxParallelProcs?: number
-  maxRetries?: number
+  concurrency?: number
+  retry?: number
   logError?: boolean
   job: Job<TData>
 }
