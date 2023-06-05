@@ -72,23 +72,18 @@ export class _Queue<TData> implements Queue<TData> {
     return this.job
       .promise(queueJob.data)
       .catch(error => {
-        this.handleError(error, queueJob)
+        if (this.logError) {
+          console.error(error)
+        }
+
+        if (queueJob.attempts < this.retry) {
+          queueJob.attempts++
+          this.waitingQueue.unshift(queueJob)
+        }
       })
       .finally(() => {
         this.runningJobs--
         this.process()
       })
-  }
-
-  handleError(error: Error, queueJob: JobController<TData>): void {
-    if (this.logError) {
-      console.error(error)
-    }
-
-    if (queueJob.attempts < this.retry) {
-      queueJob.attempts++
-      this.waitingQueue.unshift(queueJob)
-      this.process()
-    }
   }
 }
