@@ -1,5 +1,11 @@
 # @mist3rbru/safe-queue
 
+## 0.1.3
+
+### Patch Changes
+
+- c5c8660: feat(builder): accept job and job promise
+
 ## 0.1.2
 
 ### Patch Changes
