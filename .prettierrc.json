@@ -1,5 +1,5 @@
 {
-  "endOfLine": "crlf",
+  "endOfLine": "lf",
   "arrowParens": "avoid",
   "bracketSpacing": true,
   "useTabs": false,
