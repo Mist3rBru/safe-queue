@@ -20,6 +20,9 @@ describe('JobBuilder', () => {
     const catalog = sut
       .job('foo', async () => {})
       .job('bar', async (user: User) => {})
+      .job('baz', {
+        promise: async (user: User) => {}
+      })
       .build()
 
     expect(catalog).toStrictEqual<typeof catalog>({
@@ -27,6 +30,9 @@ describe('JobBuilder', () => {
         promise: expect.any(Function)
       },
       bar: {
+        promise: expect.any(Function)
+      },
+      baz: {
         promise: expect.any(Function)
       }
     })

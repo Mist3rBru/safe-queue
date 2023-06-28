@@ -5,7 +5,7 @@ export class JobBuilder<TCatalog extends JobCatalog = {}> {
 
   job<TKey extends string, TData>(
     key: TKey extends keyof TCatalog ? never : TKey,
-    promise: JobPromise<TData>
+    job: Job<TData> | JobPromise<TData>
   ): JobBuilder<
     {
       [K in keyof TCatalog]: K extends TKey ? Job<TData> : TCatalog[K]
@@ -13,8 +13,13 @@ export class JobBuilder<TCatalog extends JobCatalog = {}> {
       [K in TKey]: Job<TData>
     }
   > {
-    // @ts-ignore
-    this.catalog[key] = { promise }
+    if ('promise' in job) {
+      // @ts-ignore
+      this.catalog[key] = job
+    } else {
+      // @ts-ignore
+      this.catalog[key] = { promise: job }
+    }
     // @ts-ignore
     return this
   }

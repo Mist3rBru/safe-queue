@@ -29,7 +29,7 @@
     "start": "tsx playground.ts",
     "lint": "tsc --noEmit && prettier --write .",
     "build": "unbuild",
-    "test": "jest",
+    "test": "jest --no-cache",
     "test:w": "npm test -- --watch",
     "test:ci": "npm test -- --coverage --silent",
     "ci": "run-s lint build test",

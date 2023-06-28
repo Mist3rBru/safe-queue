@@ -1,4 +1,4 @@
-import { createJob, createQueue } from './index'
+import { createJob, createJobs, createQueue } from './index'
 import { _Queue } from './queue'
 
 describe('createQueue', () => {
@@ -18,6 +18,18 @@ describe('createJob', () => {
     const job = createJob(async () => {})
 
     expect(job).toStrictEqual({
+      promise: expect.any(Function)
+    })
+  })
+})
+
+describe('createJobs', () => {
+  it('should return Jobs catalog', () => {
+    const jobs = createJobs()
+      .job('main', async () => {})
+      .build()
+
+    expect(jobs.main).toStrictEqual({
       promise: expect.any(Function)
     })
   })
